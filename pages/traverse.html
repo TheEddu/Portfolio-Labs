@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório do Lab - Traverse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#0D1121] via-[#1a2238] to-[#283655] text-white font-sans min-h-screen relative">
+  <!-- Background image decorative -->
+  <div class="pointer-events-none fixed inset-0 z-0 flex justify-center items-center">
+    <img src="https://image.lexica.art/full_webp/6957307a-3542-4118-ae89-54a02851ef3d" alt="background" class="opacity-30 w-full h-auto hidden md:block" />
+  </div>
+  <div class="relative z-10 max-w-5xl mx-auto py-12 px-2 md:px-10">
+    <!-- Cabeçalho -->
+    <header class="mb-10">
+      <div class="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl shadow-lg p-8 flex flex-col items-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold uppercase tracking-widest text-white drop-shadow-lg mb-2">Traverse</h1>
+        <p class="text-green-100 text-lg">Relatório de Lab</p>
+        <p class="mt-2 text-sm text-green-50">Data: <span class="font-semibold">Maio de 2025</span></p>
+      </div>
+    </header>
+
+    <!-- Sumário -->
+    <nav class="mb-12">
+      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-700">
+        <h2 class="text-2xl font-bold text-blue-900 mb-4">Sumário</h2>
+        <ul class="space-y-2 text-lg list-disc list-inside">
+          <li><a href="#introducao" class="text-blue-400 hover:underline">Introdução</a></li>
+          <li><a href="#cenario" class="text-blue-400 hover:underline">Cenário do Lab</a></li>
+          <li><a href="#primeiros-passos" class="text-blue-400 hover:underline">Primeiros Passos e Reconhecimento</a></li>
+          <li><a href="#enumeracao" class="text-blue-400 hover:underline">Enumeração e Exploração</a></li>
+          <li><a href="#conclusao" class="text-blue-400 hover:underline">Conclusão e Aprendizados</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Seção: Introdução -->
+    <section class="mb-12" id="introducao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Introdução
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          O laboratório <strong>Traverse</strong> do TryHackMe propõe um cenário realista de análise e exploração de aplicações web, com foco em APIs e práticas de segurança. O objetivo é identificar falhas comuns, entender o fluxo de exploração e aprimorar habilidades de investigação em ambientes controlados, simulando situações do cotidiano profissional de segurança ofensiva.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700" id="cenario">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Cenário do Lab
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          <strong>Enumeração de Diretórios e Arquivos:</strong> O lab inicia com a análise do site comprometido, onde é fundamental identificar diretórios e arquivos relevantes (como logs e imagens) a partir de dicas presentes em comentários do código-fonte.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          <strong>Exploração de Endpoints de API:</strong> Um dos pontos centrais é a exploração de endpoints de API mal protegidos, permitindo acesso a informações sensíveis, como e-mails, senhas e privilégios de usuários. O participante aprende a manipular parâmetros para acessar dados de diferentes IDs e identificar usuários administrativos.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          <strong>Análise e Deobfuscação de Código:</strong> Somos desafiados a identificar técnicas de ofuscação em arquivos JavaScript e deobfuscá-los para extrair informações.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          <strong>Identificação e Remoção de Webshells:</strong> Localizar webshells, identificar arquivos renomeados e restaurar funcionalidades legítimas do site, removendo mensagens de comprometimento e recuperando o controle do ambiente.
+        </p>
+      </div>
+    </section>
+
+    <!-- Seção: Introdução Prática -->
+    <section class="mb-12" id="primeiros-passos">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Primeiros Passos e Reconhecimento
+        </h2>
+        <p class="text-gray-800 mb-6 text-lg">
+          O acesso inicial ao ambiente apresenta uma tela de aviso de hacking. Utilizando <kbd class="bg-gray-200 px-2 py-1 rounded text-xs font-mono">Ctrl+U</kbd>, é possível visualizar o código-fonte da página e identificar scripts JavaScript relevantes para o desafio.
+        </p>
+        <img src="../images/images-traverse/image.png" alt="Tela de aviso de hacking" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-6 text-lg">
+          O arquivo <span class="font-mono bg-gray-100 px-1 rounded">custom.min.js</span> está ofuscado. O tipo de ofuscação utilizado é a primeira flag do lab.
+        </p>
+        <img src="../images/images-traverse/image 1.png" alt="custom.min.js ofuscado" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-6 text-lg">
+          Para decodificar o hash, utilizei o <span class="font-mono bg-gray-100 px-1 rounded">hashes.com</span>, que retornou um resultado extenso. Ao analisar o texto, é possível identificar facilmente as palavras que compõem a flag.
+        </p>
+        <img src="../images/images-traverse/image 2.png" alt="Resultado do hashes.com" class="rounded-lg border border-green-200 shadow w-full md:w-2/3 mx-auto mb-4">
+      </div>
+    </section>
+
+    <!-- Seção: Enumeração e Exploração -->
+    <section class="mb-12" id="enumeracao">
+      <div class="bg-white rounded-xl shadow-lg p-8 border-l-4 border-green-800">
+        <h2 class="text-3xl font-bold text-cyan-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-cyan-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Enumeração e Exploração
+        </h2>
+        <p class="text-gray-800 mb-6 text-lg">
+          Retornando ao código-fonte, é possível identificar arquivos comentados, incluindo um diretório de logs. Acessando <span class="font-mono bg-gray-100 px-1 rounded">/logs/</span> diretamente pela URL, encontramos informações valiosas e uma nova flag.
+        </p>
+        <img src="../images/images-traverse/image 3.png" alt="Arquivos comentados" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-traverse/image 4.png" alt="Acessando logs" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-traverse/image 5.png" alt="Flag nos logs" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-6 text-lg">
+          A mensagem diz que o diretório foi nomeado conforme a primeira fase do SSDLC. Após pesquisa, basta inserir o nome correto na URL. O acesso é protegido por uma senha, disponível no arquivo de logs.
+        </p>
+        <img src="../images/images-traverse/image 6.png" alt="Primeira fase do SSDLC" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-traverse/image 7.png" alt="Senha do diretório" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-6 text-lg">
+          Com acesso ao diretório, encontramos instruções e um endpoint de API. Manipulando o parâmetro <span class="font-mono bg-gray-100 px-1 rounded">customer_id</span>, é possível consultar diferentes usuários e obter informações sensíveis.
+        </p>
+        <img src="../images/images-traverse/image 8.png" alt="API instructions" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-traverse/image 9.png" alt="Usuário comum" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-traverse/image 10.png" alt="E-mail do usuário ID 5" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-6 text-lg">
+          Por tentativa e erro, identificamos o usuário administrador, suas credenciais e a URL de login. Com isso, acessamos o painel administrativo.
+        </p>
+        <img src="../images/images-traverse/image 11.png" alt="Admin encontrado" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-traverse/image 12.png" alt="Acesso admin page" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-6 text-lg">
+          O painel permite executar comandos como System Owner, inicialmente retornando apenas <span class="font-mono bg-gray-100 px-1 rounded">www-data</span>. Utilizando as DevTools (<kbd class="bg-gray-200 px-2 py-1 rounded text-xs font-mono">F12</kbd>), é possível visualizar e alterar o comando executado.
+        </p>
+        <img src="../images/images-traverse/image 13.png" alt="Comando www-data" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-6 text-lg">
+          O comando pode ser mudado para, por exemplo, <span class="font-mono bg-gray-100 px-1 rounded">ls</span> para listar os arquivos no diretório, e então clicamos em <span class="font-mono bg-gray-100 px-1 rounded">Execute</span> novamente. E já encontramos vários arquivos, além das flags, o mais interessante agora é <span class="font-mono bg-gray-100 px-1 rounded">main.php</span>.
+        </p>
+        <img src="../images/images-traverse/image 14.png" alt="Devtools comando pwd" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-traverse/image 15.png" alt="ls arquivos" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-traverse/image 16.png" alt="cat main.php senha" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-6 text-lg">
+          Com a senha obtida, acessamos o arquivo renomeado via URL e, finalmente, o painel de gerenciamento de arquivos, onde localizamos a última flag do lab.
+        </p>
+        <img src="../images/images-traverse/image 17.png" alt="Acesso arquivo renomeado" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-traverse/image 18.png" alt="Painel de gerenciamento" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-traverse/image 19.png" alt="Última flag" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700" id="conclusao">
+      <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+        <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+        Conclusão e Aprendizados
+      </h2>
+      <ul class="list-disc pl-6 space-y-2 text-lg">
+        <li class="text-gray-800">Desenvolvimento do raciocínio lógico para correlacionar pistas e explorar diferentes vetores de ataque.</li>
+        <li class="text-gray-800">Aprimoramento prático em enumeração, manipulação de APIs e análise de código-fonte.</li>
+        <li class="text-gray-800">Atenção a detalhes, como comentários e padrões de endpoints, essenciais para o sucesso em ambientes reais.</li>
+        <li class="text-gray-800">O lab reforça a importância de práticas seguras no desenvolvimento de aplicações web e APIs.</li>
+      </ul>
+    </div>
+
+    <!-- Botão de Voltar -->
+    <div class="text-center mt-12">
+      <a href="../index.html" class="inline-block bg-gradient-to-r from-green-500 to-green-400 text-white font-bold py-3 px-8 rounded-lg shadow hover:from-green-600 hover:to-green-500 transition text-lg">← Voltar aos Labs</a>
+    </div>
+  </div>
+</body>
+</html>

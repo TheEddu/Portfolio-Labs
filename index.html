@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfólio de Labs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#0D1121] via-[#1a2238] to-[#283655] text-white font-sans min-h-screen relative">
+
+  <!-- Background Decorative -->
+  <div class="pointer-events-none fixed inset-0 z-0 flex justify-center items-center">
+    <img src="https://image.lexica.art/full_webp/6957307a-3542-4118-ae89-54a02851ef3d" alt="background" class="opacity-30 w-[900px] h-auto hidden md:block" />
+  </div>
+
+  <!-- Header -->
+  <header class="relative z-10 flex justify-between items-center px-8 py-6 bg-gradient-to-r from-[#1a2238] to-[#283655] shadow-lg">
+    <div class="flex items-center gap-4">
+      <img src="images/logo.png" class="rounded-full h-16 w-16 border-2 border-blue-400 shadow" alt="logo">
+      <span class="text-2xl font-bold tracking-wide text-blue-300">TheEddu Labs</span>
+    </div>
+    <nav class="hidden md:flex gap-8 text-lg font-medium">
+      <a href="#labs" class="hover:text-blue-400 transition">Labs</a>
+      <a href="#contato" class="hover:text-blue-400 transition">Contato</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="relative z-10 flex flex-col md:flex-row items-center justify-between px-8 md:px-16 py-16 gap-12">
+    <div class="flex-1">
+      <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6 text-blue-300 drop-shadow-lg">
+        Portfólio de<br />
+        <span class="text-white">Labs de Cybersecurity</span>
+      </h1>
+      <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-xl">
+        Bem-vindo ao meu portfólio de laboratórios práticos em segurança da informação. Aqui compartilho relatórios de labs, metodologias e aprendizados em ambientes controlados, essenciais para o desenvolvimento de habilidades técnicas e estratégicas em cybersecurity.
+      </p>
+      <a href="#labs" class="inline-block bg-orange-400 text-[#0D1121] font-bold px-8 py-3 rounded-lg shadow hover:bg-orange-500 transition text-lg">Ver Labs</a>
+    </div>
+    <img src="images/icon.webp" class="rounded-full h-80 w-80 object-cover border-4 border-blue-400 shadow-lg" alt="avatar">
+  </section>
+
+  <!-- Subtítulo / Sobre -->
+  <section class="relative z-10 text-center px-8 md:px-16 mb-16">
+    <div class="inline-block bg-[#1a2238]/80 rounded-xl shadow-lg px-8 py-8 border-l-4 border-blue-400">
+      <h2 class="text-3xl font-bold text-blue-300 mb-4">Por que praticar em Labs?</h2>
+      <p class="text-lg md:text-xl text-gray-200">
+        A prática em laboratórios é fundamental para consolidar conhecimentos em segurança digital. Os labs permitem experimentar técnicas ofensivas em ambientes próprios para isso, analisar vulnerabilidades, entender o funcionamento de sistemas e aprimorar o raciocínio lógico para resolução de problemas.
+      </p>
+    </div>
+  </section>
+
+  <!-- Labs realizados -->
+  <section id="labs" class="relative z-10 px-8 md:px-16 py-12">
+    <h2 class="text-3xl font-bold mb-8 border-b-4 border-orange-400 inline-block text-blue-300">Labs realizados</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 mt-10">
+      <!-- Lab card 1 -->
+      <div class="bg-[#1a2238]/80 rounded-xl shadow-lg flex flex-col items-center p-6 border-t-4 border-blue-400 hover:scale-105 transition">
+        <img src="https://image.lexica.art/full_webp/2f4a8c62-dbbf-4c50-9af3-9a936dcfb2c7" class="w-full h-56 object-cover rounded-lg mb-4 border-2 border-blue-300 shadow" alt="Traverse">
+        <h3 class="text-xl font-bold text-blue-200 mb-2">Traverse</h3>
+        <p class="text-gray-200 text-center mb-4 text-base">
+          Lab focado em enumeração de diretórios, exploração de APIs vulneráveis e análise de código ofuscado. Ideal para quem deseja aprimorar técnicas de pentest web e automação de ataques.
+        </p>
+        <a href="./pages/traverse.html" target="_blank" class="inline-block bg-orange-400 text-[#0D1121] font-bold px-6 py-2 rounded hover:bg-orange-500 transition">Ver Relatório</a>
+      </div>
+      <!-- Lab card 2 -->
+      <div class="bg-[#1a2238]/80 rounded-xl shadow-lg flex flex-col items-center p-6 border-t-4 border-blue-400 hover:scale-105 transition">
+        <div class="w-full h-56 bg-gray-700 rounded-lg mb-4 flex items-center justify-center text-gray-400 text-2xl font-bold">Em breve</div>
+        <h3 class="text-xl font-bold text-blue-200 mb-2">Steel Mountain</h3>
+        <p class="text-gray-200 text-center mb-4 text-base">
+          Lab voltado para exploração de vulnerabilidades em ambientes corporativos, escalonamento de privilégios e análise de logs. Relatório em desenvolvimento.
+        </p>
+        <a href="./pages/steelMountain.html" target="_blank" class="inline-block bg-orange-400 text-[#0D1121] font-bold px-6 py-2 rounded hover:bg-orange-500 transition">Ver Relatório</a>
+      </div>
+      <!-- Adicione mais cards conforme necessário -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contato" class="relative z-10 flex flex-col md:flex-row justify-between items-center px-8 md:px-16 py-12 mt-16 bg-[#1a2238]/80 border-t-2 border-blue-400">
+    <div class="flex items-center gap-4 mb-8 md:mb-0">
+      <img src="images/logo.png" class="rounded-full h-16 w-16 border-2 border-blue-400 shadow" alt="logo">
+      <span class="text-xl font-bold text-blue-200">TheEddu Labs</span>
+    </div>
+    <div class="text-right">
+      <p class="mb-2 text-gray-300">Acesse meus perfis:</p>
+      <a class="text-blue-300 hover:underline" target="_blank" href="https://github.com/TheEddu">GitHub</a><br>
+      <a class="text-blue-300 hover:underline" target="_blank" href="https://www.linkedin.com/in/eduardo-s-b39896205/">LinkedIn</a><br>
+      <a class="text-blue-300 hover:underline" target="_blank" href="https://tryhackme.com/p/TheEddu">TryHackMe</a>
+      <p class="mt-4 text-gray-400 text-sm">&copy; 2025 Meu Portfólio de Labs.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
