@@ -17,7 +17,7 @@
       <div class="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl shadow-lg p-8 flex flex-col items-center">
         <h1 class="text-4xl md:text-5xl font-extrabold uppercase tracking-widest text-white drop-shadow-lg mb-2">Pickle Rick</h1>
         <p class="text-green-100 text-lg">Relatório de Lab <a href="https://tryhackme.com/room/picklerick" class="text-green-600 hover:underline" target="_blank">Pickle Rick</a></p>
-        <p class="mt-2 text-sm text-green-50">Data: <span class="font-semibold">Maio de 2025</span></p>
+        <p class="mt-2 text-sm text-green-50">Data: <span class="font-semibold">Abril de 2024</span></p>
       </div>
     </header>
 
@@ -29,7 +29,7 @@
           <li><a href="#introducao" class="text-blue-400 hover:underline">Introdução</a></li>
           <li><a href="#enumeracao" class="text-blue-400 hover:underline">Enumeração Inicial</a></li>
           <li><a href="#acesso" class="text-blue-400 hover:underline">Acesso e Exploração</a></li>
-          <li><a href="#escalada" class="text-blue-400 hover:underline">Escalada de Privilégios</a></li>
+          <li><a href="#final" class="text-blue-400 hover:underline">Flag Final - Root</a></li>
           <li><a href="#conclusao" class="text-blue-400 hover:underline">Conclusão e Aprendizados</a></li>
         </ul>
       </div>
@@ -137,11 +137,11 @@
     </section>
 
     <!-- Escalada de Privilégios -->
-    <section class="mb-12" id="escalada">
+    <section class="mb-12" id="final">
       <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-800">
         <h2 class="text-3xl font-bold text-cyan-900 mb-5 flex items-center gap-2">
           <svg class="w-7 h-7 text-cyan-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
-          Escalada de Privilégios e Flag Final
+          Flag Final - Root
         </h2>
         <p class="text-gray-800 mb-4 text-lg">
           Para obter a última flag, precisamos acessar o diretório <span class="font-mono bg-gray-100 px-1 rounded">/root/</span>, que normalmente só é acessível por usuários com privilégios elevados (root). O painel de comandos permite o uso do <span class="font-mono bg-gray-100 px-1 rounded">sudo</span> sem senha, o que é uma falha grave de configuração.
