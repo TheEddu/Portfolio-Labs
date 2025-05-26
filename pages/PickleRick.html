@@ -46,7 +46,7 @@
           O laboratório <strong>Pickle Rick</strong> do TryHackMe é um desafio divertido e didático, inspirado na famosa série Rick and Morty. O objetivo é obter três flags escondidas em diferentes níveis de acesso ao sistema, praticando técnicas essenciais de enumeração, exploração de aplicações web e escalonamento de privilégios em ambientes Linux.
         </p>
         <p class="text-gray-800 mb-4 text-lg">
-          Este relatório detalha cada etapa do processo, destacando boas práticas, raciocínio lógico e ferramentas utilizadas para alcançar o objetivo final.
+          Este relatório detalha cada etapa do processo, destacando boas práticas, raciocínio lógico e ferramentas utilizadas para alcançar o objetivo final. O lab é excelente para quem está começando a praticar pentest, pois exige atenção a detalhes, criatividade e domínio de comandos básicos do Linux.
         </p>
       </div>
     </section>
@@ -59,25 +59,34 @@
           Enumeração Inicial
         </h2>
         <p class="text-gray-800 mb-4 text-lg">
-          O primeiro passo foi realizar uma varredura de portas com o <span class="font-mono bg-gray-100 px-1 rounded">nmap</span>:
+          O primeiro passo em qualquer pentest é identificar os serviços expostos pela máquina alvo. Para isso, utilizamos o <strong>nmap</strong>, uma das ferramentas mais tradicionais para varredura de portas e serviços:
         </p>
         <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">nmap --open -v -sS -Pn MACHINE_IP</pre>
+        <ul class="list-disc pl-6 text-gray-800 text-base mb-4">
+          <li><span class="font-mono bg-gray-100 px-1 rounded">-sS</span>: varredura SYN (stealth scan, menos detectável)</li>
+          <li><span class="font-mono bg-gray-100 px-1 rounded">-Pn</span>: ignora o ping, assume que o host está up</li>
+          <li><span class="font-mono bg-gray-100 px-1 rounded">--open</span>: mostra apenas portas abertas</li>
+          <li><span class="font-mono bg-gray-100 px-1 rounded">-v</span>: modo verbose, exibe mais detalhes</li>
+        </ul>
         <img src="../images/images-PickleRick/Image 1.png" alt="Nmap scan" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
         <p class="text-gray-800 mb-4 text-lg">
-          Foram identificadas as portas <strong>22</strong> (SSH) e <strong>80</strong> (HTTP) abertas. Acessando a aplicação web, encontramos um formulário de login simples (<span class="font-mono bg-gray-100 px-1 rounded">login.php</span>).
+          O resultado mostra as portas <strong>22</strong> (SSH) e <strong>80</strong> (HTTP) abertas. O SSH pode ser útil em etapas avançadas, mas inicialmente focamos na porta 80, onde geralmente há uma aplicação web.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Acessando o endereço no navegador, encontramos um formulário de login (<span class="font-mono bg-gray-100 px-1 rounded">login.php</span>). Uma das melhores práticas é sempre inspecionar o código-fonte da página (<kbd class="bg-gray-200 px-2 py-1 rounded text-xs font-mono">Ctrl+U</kbd>), pois desenvolvedores podem deixar comentários ou informações sensíveis.
         </p>
         <img src="../images/images-PickleRick/Image 2.png" alt="Login page" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
-        <p class="text-gray-800 mb-4 text-lg">
-          Analisando o código-fonte da página, encontramos o nome de usuário como comentário.
-        </p>
         <img src="../images/images-PickleRick/Image 3.png" alt="View source user" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
         <p class="text-gray-800 mb-4 text-lg">
-          Também é uma boa prática verificar o arquivo <span class="font-mono bg-gray-100 px-1 rounded">robots.txt</span>, onde encontramos uma sequência de caracteres que pode ser utilizada como senha.
+          No código-fonte, encontramos o nome de usuário anotado como comentário. Outro passo essencial é verificar o arquivo <span class="font-mono bg-gray-100 px-1 rounded">robots.txt</span> (<span class="font-mono bg-gray-100 px-1 rounded">http://MACHINE_IP/robots.txt</span>), que pode conter diretivas para mecanismos de busca, mas muitas vezes revela arquivos ou strings sensíveis.
         </p>
         <p class="text-gray-800 mb-4 text-lg">
-          Testando o login com o usuário encontrado e a sequência do <span class="font-mono bg-gray-100 px-1 rounded">robots.txt</span> como senha, o acesso foi concedido.
+          No <span class="font-mono bg-gray-100 px-1 rounded">robots.txt</span>, encontramos uma sequência de caracteres que, ao ser testada como senha junto ao usuário encontrado, permite o acesso ao sistema.
         </p>
         <img src="../images/images-PickleRick/Image 4.png" alt="Login success" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Esse processo evidencia a importância de sempre analisar arquivos e comentários aparentemente "inofensivos" durante a fase de reconhecimento.
+        </p>
       </div>
     </section>
 
@@ -89,29 +98,41 @@
           Acesso e Exploração do Sistema
         </h2>
         <p class="text-gray-800 mb-4 text-lg">
-          Após o login, temos acesso a um painel de comandos. Utilizando comandos básicos como <span class="font-mono bg-gray-100 px-1 rounded">ls</span>, identificamos arquivos interessantes, incluindo um <span class="font-mono bg-gray-100 px-1 rounded">.txt</span> com a primeira flag.
+          Após o login, somos direcionados a um painel de comandos web. Esse tipo de funcionalidade é bastante perigosa em aplicações reais, pois pode permitir a execução arbitrária de comandos no servidor.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          O primeiro comando a ser testado é o clássico <span class="font-mono bg-gray-100 px-1 rounded">ls</span>, que lista os arquivos do diretório atual. Com isso, identificamos arquivos interessantes, incluindo um <span class="font-mono bg-gray-100 px-1 rounded">.txt</span> com a primeira flag.
         </p>
         <img src="../images/images-PickleRick/Image 5.png" alt="Command panel" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
         <img src="../images/images-PickleRick/Image 6.png" alt="Flag 1" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
         <p class="text-gray-800 mb-4 text-lg">
-          A flag pode ser visualizada diretamente pela URL.
+          Para visualizar o conteúdo da flag, podemos acessar diretamente pela URL.
         </p>
         <img src="../images/images-PickleRick/Image 7.png" alt="Flag 1 URL" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
         <p class="text-gray-800 mb-4 text-lg">
-          Continuando a exploração, navegamos pelos diretórios do sistema:
+          Para avançar, é importante explorar a estrutura de diretórios do sistema. Utilizamos:
         </p>
         <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">cd /home; ls -al; pwd</pre>
+        <ul class="list-disc pl-6 text-gray-800 text-base mb-4">
+          <li><span class="font-mono bg-gray-100 px-1 rounded">cd /home</span>: acessa o diretório home</li>
+          <li><span class="font-mono bg-gray-100 px-1 rounded">ls -al</span>: lista todos os arquivos, inclusive ocultos, com detalhes</li>
+          <li><span class="font-mono bg-gray-100 px-1 rounded">pwd</span>: exibe o caminho atual</li>
+        </ul>
         <img src="../images/images-PickleRick/Image 8.png" alt="Home dirs" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
         <p class="text-gray-800 mb-4 text-lg">
-          Identificamos os usuários <strong>rick</strong> e <strong>ubuntu</strong>. Explorando o diretório do usuário Rick:
+          Descobrimos os usuários <strong>rick</strong> e <strong>ubuntu</strong>. O próximo passo é explorar o diretório do usuário Rick, pois geralmente é onde flags e arquivos sensíveis são armazenados:
         </p>
         <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">cd /home/rick; ls -al; pwd</pre>
         <img src="../images/images-PickleRick/Image 10.png" alt="Rick dir" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
         <img src="../images/images-PickleRick/Image 11.png" alt="Flag 2 found" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
         <p class="text-gray-800 mb-4 text-lg">
-          Encontramos o arquivo com a segunda flag. Utilizando <span class="font-mono bg-gray-100 px-1 rounded">less /home/rick/"second ingredients"</span>, conseguimos visualizar seu conteúdo.
+          Encontramos o arquivo <span class="font-mono bg-gray-100 px-1 rounded">second ingredients</span>, que contém a segunda flag. Para ler seu conteúdo, usamos:
         </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">less /home/rick/"second ingredients"</pre>
         <img src="../images/images-PickleRick/Image 12.png" alt="Flag 2" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          O comando <span class="font-mono bg-gray-100 px-1 rounded">less</span> é útil para visualizar arquivos longos ou com espaços no nome. Alternativamente, <span class="font-mono bg-gray-100 px-1 rounded">cat</span> também pode ser utilizado.
+        </p>
       </div>
     </section>
 
@@ -123,15 +144,21 @@
           Escalada de Privilégios e Flag Final
         </h2>
         <p class="text-gray-800 mb-4 text-lg">
-          Para obter a última flag, é necessário acessar o diretório <span class="font-mono bg-gray-100 px-1 rounded">/root/</span>. Utilizando o comando:
+          Para obter a última flag, precisamos acessar o diretório <span class="font-mono bg-gray-100 px-1 rounded">/root/</span>, que normalmente só é acessível por usuários com privilégios elevados (root). O painel de comandos permite o uso do <span class="font-mono bg-gray-100 px-1 rounded">sudo</span> sem senha, o que é uma falha grave de configuração.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Listamos o conteúdo do diretório root:
         </p>
         <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">sudo ls /root/</pre>
         <img src="../images/images-PickleRick/Image 13.png" alt="Root dir" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
         <p class="text-gray-800 mb-4 text-lg">
-          O arquivo <span class="font-mono bg-gray-100 px-1 rounded">3rd.txt</span> está presente. Para visualizar seu conteúdo:
+          O arquivo <span class="font-mono bg-gray-100 px-1 rounded">3rd.txt</span> está presente. Para visualizar seu conteúdo, usamos:
         </p>
         <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">sudo less /root/3rd.txt</pre>
         <img src="../images/images-PickleRick/Image 14.png" alt="Flag 3" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          O uso do <span class="font-mono bg-gray-100 px-1 rounded">sudo</span> para acessar arquivos do root demonstra a importância de configurar corretamente as permissões de sudoers em sistemas Linux.
+        </p>
         <p class="text-gray-800 mb-4 text-lg">
           Com isso, todas as flags foram encontradas, demonstrando o fluxo completo de enumeração, exploração e escalonamento de privilégios.
         </p>
