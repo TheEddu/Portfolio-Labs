@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório de Lab - Pickle Rick</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#0D1121] via-[#1a2238] to-[#283655] text-white font-sans min-h-screen relative">
+  <!-- Background image decorative -->
+  <div class="pointer-events-none fixed inset-0 z-0 flex justify-center items-center">
+    <img src="https://image.lexica.art/full_webp/6957307a-3542-4118-ae89-54a02851ef3d" alt="background" class="opacity-30 w-full h-auto hidden md:block" />
+  </div>
+  <div class="relative z-10 max-w-5xl mx-auto py-12 px-2 md:px-10">
+    <!-- Cabeçalho -->
+    <header class="mb-10">
+      <div class="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl shadow-lg p-8 flex flex-col items-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold uppercase tracking-widest text-white drop-shadow-lg mb-2">Pickle Rick</h1>
+        <p class="text-green-100 text-lg">Relatório de Lab <a href="https://tryhackme.com/room/picklerick" class="text-green-600 hover:underline" target="_blank">Pickle Rick</a></p>
+        <p class="mt-2 text-sm text-green-50">Data: <span class="font-semibold">Maio de 2025</span></p>
+      </div>
+    </header>
+
+    <!-- Sumário -->
+    <nav class="mb-12">
+      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-700">
+        <h2 class="text-2xl font-bold text-blue-900 mb-4">Sumário</h2>
+        <ul class="space-y-2 text-lg list-disc list-inside">
+          <li><a href="#introducao" class="text-blue-400 hover:underline">Introdução</a></li>
+          <li><a href="#enumeracao" class="text-blue-400 hover:underline">Enumeração Inicial</a></li>
+          <li><a href="#acesso" class="text-blue-400 hover:underline">Acesso e Exploração</a></li>
+          <li><a href="#escalada" class="text-blue-400 hover:underline">Escalada de Privilégios</a></li>
+          <li><a href="#conclusao" class="text-blue-400 hover:underline">Conclusão e Aprendizados</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Introdução -->
+    <section class="mb-12" id="introducao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Introdução
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          O laboratório <strong>Pickle Rick</strong> do TryHackMe é um desafio divertido e didático, inspirado na famosa série Rick and Morty. O objetivo é obter três flags escondidas em diferentes níveis de acesso ao sistema, praticando técnicas essenciais de enumeração, exploração de aplicações web e escalonamento de privilégios em ambientes Linux.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Este relatório detalha cada etapa do processo, destacando boas práticas, raciocínio lógico e ferramentas utilizadas para alcançar o objetivo final.
+        </p>
+      </div>
+    </section>
+
+    <!-- Enumeração Inicial -->
+    <section class="mb-12" id="enumeracao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Enumeração Inicial
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          O primeiro passo foi realizar uma varredura de portas com o <span class="font-mono bg-gray-100 px-1 rounded">nmap</span>:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">nmap --open -v -sS -Pn MACHINE_IP</pre>
+        <img src="../images/images-PickleRick/Image 1.png" alt="Nmap scan" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Foram identificadas as portas <strong>22</strong> (SSH) e <strong>80</strong> (HTTP) abertas. Acessando a aplicação web, encontramos um formulário de login simples (<span class="font-mono bg-gray-100 px-1 rounded">login.php</span>).
+        </p>
+        <img src="../images/images-PickleRick/Image 2.png" alt="Login page" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Analisando o código-fonte da página, encontramos o nome de usuário como comentário.
+        </p>
+        <img src="../images/images-PickleRick/Image 3.png" alt="View source user" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Também é uma boa prática verificar o arquivo <span class="font-mono bg-gray-100 px-1 rounded">robots.txt</span>, onde encontramos uma sequência de caracteres que pode ser utilizada como senha.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Testando o login com o usuário encontrado e a sequência do <span class="font-mono bg-gray-100 px-1 rounded">robots.txt</span> como senha, o acesso foi concedido.
+        </p>
+        <img src="../images/images-PickleRick/Image 4.png" alt="Login success" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Acesso e Exploração -->
+    <section class="mb-12" id="acesso">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Acesso e Exploração do Sistema
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Após o login, temos acesso a um painel de comandos. Utilizando comandos básicos como <span class="font-mono bg-gray-100 px-1 rounded">ls</span>, identificamos arquivos interessantes, incluindo um <span class="font-mono bg-gray-100 px-1 rounded">.txt</span> com a primeira flag.
+        </p>
+        <img src="../images/images-PickleRick/Image 5.png" alt="Command panel" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-PickleRick/Image 6.png" alt="Flag 1" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          A flag pode ser visualizada diretamente pela URL.
+        </p>
+        <img src="../images/images-PickleRick/Image 7.png" alt="Flag 1 URL" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Continuando a exploração, navegamos pelos diretórios do sistema:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">cd /home; ls -al; pwd</pre>
+        <img src="../images/images-PickleRick/Image 8.png" alt="Home dirs" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Identificamos os usuários <strong>rick</strong> e <strong>ubuntu</strong>. Explorando o diretório do usuário Rick:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">cd /home/rick; ls -al; pwd</pre>
+        <img src="../images/images-PickleRick/Image 10.png" alt="Rick dir" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-PickleRick/Image 11.png" alt="Flag 2 found" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Encontramos o arquivo com a segunda flag. Utilizando <span class="font-mono bg-gray-100 px-1 rounded">less /home/rick/"second ingredients"</span>, conseguimos visualizar seu conteúdo.
+        </p>
+        <img src="../images/images-PickleRick/Image 12.png" alt="Flag 2" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Escalada de Privilégios -->
+    <section class="mb-12" id="escalada">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-800">
+        <h2 class="text-3xl font-bold text-cyan-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-cyan-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Escalada de Privilégios e Flag Final
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Para obter a última flag, é necessário acessar o diretório <span class="font-mono bg-gray-100 px-1 rounded">/root/</span>. Utilizando o comando:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">sudo ls /root/</pre>
+        <img src="../images/images-PickleRick/Image 13.png" alt="Root dir" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          O arquivo <span class="font-mono bg-gray-100 px-1 rounded">3rd.txt</span> está presente. Para visualizar seu conteúdo:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">sudo less /root/3rd.txt</pre>
+        <img src="../images/images-PickleRick/Image 14.png" alt="Flag 3" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Com isso, todas as flags foram encontradas, demonstrando o fluxo completo de enumeração, exploração e escalonamento de privilégios.
+        </p>
+      </div>
+    </section>
+
+    <!-- Conclusão e Aprendizados -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700" id="conclusao">
+      <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+        <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+        Conclusão e Aprendizados
+      </h2>
+      <ul class="list-disc pl-6 space-y-2 text-lg">
+        <li class="text-gray-800">A importância da enumeração detalhada, desde o reconhecimento de portas até a análise de arquivos ocultos.</li>
+        <li class="text-gray-800">A análise de código-fonte e arquivos como <span class="font-mono bg-gray-100 px-1 rounded">robots.txt</span> pode revelar informações cruciais.</li>
+        <li class="text-gray-800">Acesso a painéis restritos pode ser obtido com criatividade e atenção a detalhes.</li>
+        <li class="text-gray-800">A escalada de privilégios é fundamental para obter controle total do sistema e acessar arquivos protegidos.</li>
+        <li class="text-gray-800">O lab reforça a importância de boas práticas de desenvolvimento e configuração segura de sistemas.</li>
+      </ul>
+      <p class="text-gray-800 mt-6 text-lg">
+        O desafio Pickle Rick é uma excelente introdução à metodologia de pentest, proporcionando uma experiência prática e divertida para quem está começando na área de segurança ofensiva.
+      </p>
+    </div>
+
+    <!-- Botão de Voltar -->
+    <div class="text-center mt-12">
+      <a href="../index.html" class="inline-block bg-gradient-to-r from-green-500 to-green-400 text-white font-bold py-3 px-8 rounded-lg shadow hover:from-green-600 hover:to-green-500 transition text-lg">← Voltar aos Labs</a>
+    </div>
+  </div>
+</body>
+</html>
