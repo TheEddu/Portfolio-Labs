@@ -30,11 +30,11 @@ labs/
 ├── pages/
 ├── images/                 
 └── README.md               
-```
+```'
 
 ## Como Acessar
 
-**Acesse em:** https://theeddu.github.io/PortfolioLabs
+**Acesse em:** https://theeddu.github.io/Portfolio-Labs
 
 ## Exemplos de Labs
 
